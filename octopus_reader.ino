@@ -1,17 +1,15 @@
 /**************************************************************************/
 /*
     Read Octopus Balance with Arduino Nano + PN532 NFC RFID module
-
-	Connection Diagram:
-	
-	  Nano             PN532 b
-	+------+          +------+
-	+  +5V +----------+ VCC  +
-	+  GND +----------+ GND  +  
-	+   A5 +----------+ SCL  +  
-	+   A4 +----------+ SDA  +
-	+------+          +------+
-
+  Connection Diagram:
+  
+    Nano             PN532 b
+  +------+          +------+
+  +  +5V +----------+ VCC  +
+  +  GND +----------+ GND  +  
+  +   A5 +----------+ SCL  +  
+  +   A4 +----------+ SDA  +
+  +------+          +------+
  */
 /**************************************************************************/
 #include <Arduino.h>
@@ -104,13 +102,17 @@ void loop(void)
         Serial.print(systemCodeResponse, HEX);
         Serial.print("\n");
               
-        uint32_t balance = 0;
+        int32_t balance = 0;
         for(int i=0;i<4;i++) {
           balance<<=8;
           balance|=blockData[0][i];  
         }
         balance = balance - 350;
         Serial.print("Balance:");
+        if (balance<0) {
+            Serial.print("-");
+            balance=-balance;
+        }
         Serial.print((balance - (balance % 10))/10);
         Serial.print(".");
         Serial.println(balance % 10);
